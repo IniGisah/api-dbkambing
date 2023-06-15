@@ -1,0 +1,10 @@
+CREATE TABLE weight_data (
+  ID SERIAL PRIMARY KEY NOT NULL,
+  animal_name VARCHAR(30),
+  rfid VARCHAR(30),
+  animal_species VARCHAR(30),
+  weight_before NUMERIC(3,1),
+  weight_after NUMERIC(3,1),
+  created_at TIMESTAMP,
+  last_updated TIMESTAMP
+);
