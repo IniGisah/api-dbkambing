@@ -8,7 +8,16 @@ router.get('/', async function(req, res, next) {
   try {
     res.json(await dbworker.getMultiple());
   } catch (err) {
-    console.error(`Error while getting programming languages `, err.message);
+    console.error(`Error while getting weight data `, err.message);
+    next(err);
+  }
+});
+
+router.get('/:id', async function(req, res, next) {
+  try {
+    res.json(await dbworker.getById(req.params.id));
+  } catch (err) {
+    console.error(`Error while getting weight data `, err.message);
     next(err);
   }
 });
@@ -18,7 +27,7 @@ router.post('/', auth.isAuth, async function(req, res, next) {
     try {
       res.json(await dbworker.create(req.body));
     } catch (err) {
-      console.error(`Error while creating programming language`, err.message);
+      console.error(`Error while creating weight data`, err.message);
       next(err);
     }
   });
@@ -28,7 +37,7 @@ router.put('/:id', auth.isAuth, async function(req, res, next) {
   try {
     res.json(await dbworker.update(req.params.id, req.body));
   } catch (err) {
-    console.error(`Error while updating programming language`, err.message);
+    console.error(`Error while updating weight data`, err.message);
     next(err);
   }
 });
@@ -38,7 +47,7 @@ router.delete('/:id', auth.isAuth, async function(req, res, next) {
   try {
     res.json(await dbworker.remove(req.params.id));
   } catch (err) {
-    console.error(`Error while deleting programming language`, err.message);
+    console.error(`Error while deleting weight data`, err.message);
     next(err);
   }
 });

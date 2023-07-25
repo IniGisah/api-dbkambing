@@ -20,18 +20,35 @@ async function getMultiple(page = 1){
   }
 }
 
+async function getById(id){
+  const rows = await db.query(
+    `SELECT *
+    FROM weight_data
+    WHERE rfid='${id}'`
+  );
+  const data = rows.rows
+  return {data}
+}
+
 async function create(dbtimbangan){
-    const result = await db.query(
+  let result
+  let message = 'Error in creating weight data entry';
+  const datacheck = await db.query(
+    `SELECT *
+    FROM weight_data
+    WHERE rfid='${dbtimbangan.id}'`
+  );
+  if (datacheck.rows.length == 0){
+    result = await db.query(
       `INSERT INTO "weight_data" ("animal_name", "rfid", "animal_species", "weight_before", "weight_after", "created_at", "last_updated") 
       VALUES ('${dbtimbangan.animal_name}', '${dbtimbangan.id}', '${dbtimbangan.animal_species}', '${dbtimbangan.weight}', '0', '${moment(new Date()).format('YYYY-MM-DD HH:mm:ss.000')}', '${moment(new Date()).format('YYYY-MM-DD HH:mm:ss.000')}')`
     );
-  
-    let message = 'Error in creating programming language';
-  
     if (result.rowCount) {
       message = 'Weight data created successfully';
     }
-  
+  } else if (datacheck.rows.length != 0){
+    update(dbtimbangan.id, dbtimbangan)
+  }  
     return {message};
   }
 
@@ -42,7 +59,7 @@ async function update(id, dbtimbangan){
     WHERE rfid='${id}'` 
   );
 
-  let message = 'Error in updating programming language';
+  let message = 'Error in updating weight data entry';
   
   if (result.rowCount) {
     message = 'Weight data updated successfully';
@@ -56,7 +73,7 @@ async function remove(id){
     `DELETE FROM weight_data WHERE rfid = '${id}'`
   );
 
-  let message = 'Error in deleting programming language';
+  let message = 'Error in deleting weight data entry';
 
   if (result.rowCount) {
     message = `Weight data from ${id} deleted successfully`;
@@ -69,5 +86,6 @@ module.exports = {
   getMultiple,
   create,
   update,
-  remove
+  remove,
+  getById
 }
